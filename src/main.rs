@@ -14,15 +14,26 @@ mod days;
 #[structopt(name = "AoC2022", about = "Advent of Code 2022 Solver")]
 struct Opt {
     #[structopt(name = "DAY")]
-    day: i8,
+    day: u8,
 }
 
 // todo: proper error handling
 fn main() -> Result<(), Box<dyn Error>> {
     let opt = Opt::from_args();
 
-    let mut day_to_solve = match opt.day {
-        1 => day01::Day01::default(),
+    if opt.day == 0 || opt.day > 25 {
+        println!("Day number must be between 1-25 inclusive.");
+        process::exit(1);
+    }
+
+    let input_file = format!("{}{:0>2}{}", INPUT_PREFIX, opt.day, INPUT_SUFFIX);
+
+    let input = fs::read_to_string(input_file.clone())
+        .context(format!("Unable to open input file '{}'", input_file))?;
+
+    let mut day_to_solve: Box<dyn Day> = match opt.day {
+        1 => Box::new(day01::Day01::default()),
+        2 => Box::new(day02::Day02::default()),
         _ => {
             println!(
                 "This is an invalid or not yet reached day number: '{}'",
@@ -32,11 +43,6 @@ fn main() -> Result<(), Box<dyn Error>> {
             process::exit(1);
         }
     };
-
-    let input_file = format!("{}{:0>2}{}", INPUT_PREFIX, opt.day, INPUT_SUFFIX);
-
-    let input = fs::read_to_string(input_file.clone())
-        .context(format!("Unable to open input file '{}'", input_file))?;
 
     let solution = day_to_solve.get_solutions(&input);
 
