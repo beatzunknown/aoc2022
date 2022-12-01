@@ -1,3 +1,5 @@
+pub mod utils;
+
 use std::fmt;
 
 pub const INPUT_PREFIX: &str = "src/days/day";
@@ -14,38 +16,31 @@ impl Part {
     }
 }
 
-pub struct Input<'a> {
-    text: &'a str,
+pub struct Solution {
+    part1: String,
+    part2: String,
 }
 
-impl<'a> Input<'a> {
-    pub fn new(text: &'a str) -> Self {
-        Self { text }
-    }
-}
-
-pub struct Solution<'a> {
-    part1: &'a str,
-    part2: &'a str,
-}
-
-impl<'a> Solution<'a> {
-    pub fn new(part1: &'a str, part2: &'a str) -> Self {
+impl Solution {
+    pub fn new(part1: String, part2: String) -> Self {
         Self { part1, part2 }
     }
 }
 
-impl<'a> fmt::Display for Solution<'a> {
+impl fmt::Display for Solution {
     fn fmt(&self, fmt: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(fmt, "Day 1 solution: {}", self.part1)?;
+        writeln!(fmt, "Day 1 solution: {}", self.part1)?;
         write!(fmt, "Day 2 solution: {}", self.part2)
     }
 }
 
 pub trait Day<'a> {
-    fn solve(&self, input: &'a str, part: Part) -> &'a str;
+    fn solve(&mut self, input: &'a str, part: Part) -> String;
 
-    fn get_solutions(&self, input: &'a str) -> Solution<'a> {
+    fn run_preliminary_tasks(&mut self, _input: &'a str) {}
+
+    fn get_solutions(&mut self, input: &'a str) -> Solution {
+        self.run_preliminary_tasks(input);
         Solution::new(self.solve(input, Part::One), self.solve(input, Part::Two))
     }
 }

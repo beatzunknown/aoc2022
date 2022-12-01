@@ -21,8 +21,8 @@ struct Opt {
 fn main() -> Result<(), Box<dyn Error>> {
     let opt = Opt::from_args();
 
-    let day_to_solve = match opt.day {
-        1 => day01::Day01 {},
+    let mut day_to_solve = match opt.day {
+        1 => day01::Day01::default(),
         _ => {
             println!(
                 "This is an invalid or not yet reached day number: '{}'",
