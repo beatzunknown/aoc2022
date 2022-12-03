@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+use std::hash::Hash;
 use std::str::FromStr;
 
 // thanks Fornwall
@@ -12,4 +14,17 @@ pub fn parse_lines<T: FromStr>(input: &str) -> Result<Vec<T>, String> {
                 .map_err(|_| format!("Line {}: Not a valid integer", line_idx + 1))
         })
         .collect()
+}
+
+pub fn intersect_sets<T, I>(sets: I) -> Option<HashSet<T>>
+where
+    I: IntoIterator<Item = HashSet<T>>,
+    T: Eq + Hash + Copy,
+{
+    let mut iter = sets.into_iter();
+    iter.next().map(|set| {
+        iter.fold(set, |a, b| {
+            a.intersection(&b).copied().collect::<HashSet<T>>()
+        })
+    })
 }
