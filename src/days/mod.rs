@@ -4,4 +4,5 @@ pub(crate) mod day03;
 pub(crate) mod day04;
 pub(crate) mod day05;
 pub(crate) mod day06;
+pub(crate) mod day07;
 mod day_template;
