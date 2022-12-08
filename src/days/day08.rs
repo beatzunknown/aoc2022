@@ -1,6 +1,5 @@
-use aoc2022_lib::{utils, Day, Part};
+use aoc2022_lib::{Day, Part};
 use std::cmp;
-use text_io::scan;
 
 #[derive(Default)]
 pub struct Day08 {}
@@ -18,54 +17,42 @@ impl<'a> Day<'a> for Day08 {
         for i in 1..n_rows - 1 {
             for j in 1..n_cols - 1 {
                 let x = trees[i][j];
-                let mut visible_sides = 4;
-                let mut scores: Vec<usize> = Vec::with_capacity(4);
-                for k in (0..i).rev() {
-                    if x <= trees[k][j] {
-                        visible_sides -= 1;
-                        scores.push(i - k);
-                        break;
+                let mut visible = false;
+                let mut score = 1;
+                score *= match (0..i).rev().find(|&k| x <= trees[k][j]) {
+                    None => {
+                        visible = true;
+                        i
                     }
-                }
-                if scores.len() == 0 {
-                    scores.push(i);
-                }
-                for k in i + 1..n_rows {
-                    if x <= trees[k][j] {
-                        visible_sides -= 1;
-                        scores.push(k - i);
-                        break;
+                    Some(h) => i - h,
+                };
+                score *= match (i + 1..n_rows).find(|&k| x <= trees[k][j]) {
+                    None => {
+                        visible = true;
+                        n_rows - i - 1
                     }
-                }
-                if scores.len() == 1 {
-                    scores.push(n_rows - i - 1);
-                }
-                for k in (0..j).rev() {
-                    if x <= trees[i][k] {
-                        visible_sides -= 1;
-                        scores.push(j - k);
-                        break;
+                    Some(h) => h - i,
+                };
+                score *= match (0..j).rev().find(|&k| x <= trees[i][k]) {
+                    None => {
+                        visible = true;
+                        j
                     }
-                }
-                if scores.len() == 2 {
-                    scores.push(j)
-                }
-                for k in j + 1..n_cols {
-                    if x <= trees[i][k] {
-                        visible_sides -= 1;
-                        scores.push(k - j);
-                        break;
+                    Some(h) => j - h,
+                };
+                score *= match (j + 1..n_cols).find(|&k| x <= trees[i][k]) {
+                    None => {
+                        visible = true;
+                        n_rows - j - 1
                     }
-                }
-                if scores.len() == 3 {
-                    scores.push(n_cols - j - 1);
-                }
-                if visible_sides > 0 {
-                    n_visible += 1;
-                }
-                max_scenic = cmp::max(max_scenic, scores.iter().product());
+                    Some(h) => h - j,
+                };
+
+                n_visible += visible as usize;
+                max_scenic = cmp::max(max_scenic, score);
             }
         }
+
         if part.is_first() {
             n_visible.to_string()
         } else {
