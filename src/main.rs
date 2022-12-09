@@ -40,6 +40,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         6 => Box::new(day06::Day06::default()),
         7 => Box::new(day07::Day07::default()),
         8 => Box::new(day08::Day08::default()),
+        9 => Box::new(day09::Day09::default()),
         _ => {
             println!(
                 "This is an invalid or not yet reached day number: '{}'",
