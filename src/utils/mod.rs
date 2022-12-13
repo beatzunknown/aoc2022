@@ -4,7 +4,6 @@ use std::str::FromStr;
 
 // thanks Fornwall
 // https://github.com/fornwall/advent-of-code/blob/master/crates/core/src/common/parser.rs
-
 pub fn parse_lines<T: FromStr>(input: &str) -> Result<Vec<T>, String> {
     input
         .lines()
