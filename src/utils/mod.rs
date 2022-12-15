@@ -27,3 +27,14 @@ where
         })
     })
 }
+
+pub fn split_to_vec<T: FromStr>(input: &str, delim: &str) -> Result<Vec<T>, String> {
+    input
+        .split(delim)
+        .enumerate()
+        .map(|(i, x)| {
+            x.parse::<T>()
+                .map_err(|_| format!("Element {} malformed", i + 1))
+        })
+        .collect()
+}
